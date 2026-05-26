@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Golos';
+    src: url('/fonts/Golos.woff2') format('woff2');
+}
+
+:root {
+  --primary-contast-text: rgba(255, 255, 255, 1);
+  --primary-main: rgba(20, 184, 144, 1);
+
+  --text-primary: rgba(44, 48, 48, 1);
+  --text-secondary: rgba(154, 156, 156, 1);
+
+  --other-gray: rgba(243, 243, 243, 1);
+  --divider: rgba(232, 232, 232, 1);
+  --border-gray: rgba(213, 213, 213, 1);
+
+  --box-shadow: 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+}
+
+html, body, button, input, textarea, select, a {
+    font-family: 'Golos', sans-serif;
+    color: var(--text-primary);
+}
