@@ -1,13 +1,18 @@
 <script lang="ts" setup>
+const tabs = [
+    { key: 'objects', label: 'Объекты'},
+    { key: 'checks', label: 'Проверки'}
+]
 </script>
 
 <template>
     <AppComponent
     iconName="zero-statistics"
     textFirstLine="Нет статистики для показа"
-    :tabsNeeded="true" >
-        <template #filters-objects>
-            <div class="statistics__filters-wrapper">
+    :tabsNeeded="true"
+    :tabs="tabs" >
+        <template #tab-content="{ activeTab }">
+            <div v-if="activeTab === 'objects'" class="statistics__filters-wrapper">
                 <AppInput type="calendar" placeholder="За все время"
                 class="statistics__filters-input statistics__filters-input--time"/>
                 <AppInput type="select" placeholder="Все типы"
@@ -15,10 +20,9 @@
                 <AppInput type="select" placeholder="Все задачи"
                 class="statistics__filters-input statistics__filters-input--objects-tasks"/>
             </div>
-        </template>
 
-        <template #filters-checks>
-            <div class="statistics__filters-wrapper">
+
+            <div v-else-if="activeTab === 'checks'" class="statistics__filters-wrapper">
                 <AppInput type="calendar" placeholder="За все время"
                 class="statistics__filters-input statistics__filters-input--time"/>
                 <AppInput type="select" placeholder="Все города"

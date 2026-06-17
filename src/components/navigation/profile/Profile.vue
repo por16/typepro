@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useLocalStorage } from '@/composables/useLocalStorage'
+import AppInfoTable from '@/components/globals/AppInfoTable.vue'
 
 const userStore = useUserStore()
 const companyStore = useLocalStorage()
@@ -17,58 +18,24 @@ const hidePassword = computed(() => {
         <template #content>
             <div class="app-profile">
                 <div class="app-profile__info">
-
-                    <div class="app-profile__info-block">
-                        <p class="app-profile__info-block--label">Контактное лицо</p>
-                        <div class="app-profile__info-tabel">
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">E-mail</span>
-                                <span>{{ userStore.user?.email }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Пароль</span>
-                                <span>{{ hidePassword }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Имя</span>
-                                <span>{{ userStore.user?.name || 'Не указано' }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Фамилия</span>
-                                <span>{{ userStore.user?.surname || 'Не указано' }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Телефон</span>
-                                <span>{{ userStore.user?.phoneNumber || 'Не указано' }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="app-profile__info-block">
-                        <p class="app-profile__info-block--label">Информация о компании</p>
-                        <div class="app-profile__info-tabel">
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Название</span>
-                                <span>{{ companyStore.company.value.name || 'Не указано' }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Логотип</span>
-                                <span>{{ companyStore.company.value.logo || 'Нет' }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Краткое описание <br>деятельности</span>
-                                <span class="line-break">{{ companyStore.company.value.activities || 'Не указано' }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Ссылка на сайт</span>
-                                <span>{{ companyStore.company.value.siteLink || 'Нет' }}</span>
-                            </div>
-                            <div class="app-profile__info-line">
-                                <span class="app-profile__info-line--left text--light-gray">Ссылка на группу VK</span>
-                                <span>{{ companyStore.company.value.VKGroupLink || 'Нет' }}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <AppInfoTable
+                    label="Контактное лицо"
+                    :rows="[
+                        { label: 'E-mail', value: userStore.user?.email },
+                        { label: 'Пароль', value: hidePassword },
+                        { label: 'Имя', value: userStore.user?.name || 'Не указано' },
+                        { label: 'Фамилия', value: userStore.user?.surname || 'Не указано' },
+                        { label: 'Телефон', value: userStore.user?.phoneNumber || 'Не указано' }
+                    ]" />
+                    <AppInfoTable
+                    label="Информация о компании"
+                    :rows="[
+                        { label: 'Название', value: companyStore.company.value.name || 'Не указано' },
+                        { label: 'Логотип', value: companyStore.company.value.logo || 'Нет' },
+                        { label: `Краткое описание <br> деятельности`, value: companyStore.company.value.activities || 'Не указано' },
+                        { label: 'Ссылка на сайт', value: companyStore.company.value.siteLink || 'Нет' },
+                        { label: 'Ссылка на группу VK', value: companyStore.company.value.VKGroupLink || 'Нет' },
+                    ]"/>
                 </div>
 
                 <div class="app-profile__buttons">

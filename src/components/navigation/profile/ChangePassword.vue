@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useRegle } from '@regle/core'
-import { required, minLength, sameAs, withMessage  } from '@regle/rules'
+import { required, minLength, maxLength, sameAs, withMessage } from '@regle/rules'
 import { useUserStore } from '@/stores/userStore'
 
 const emit = defineEmits<{
@@ -23,7 +23,8 @@ const { r$ } = useRegle(form, {
   },
   newPassword: {
     required: withMessage(required, 'Поле обязательно для заполнения'),
-    minLength: withMessage(minLength(6), 'Пароль должен содержать минимум 6 символов')
+    minLength: withMessage(minLength(6), 'Пароль должен содержать минимум 6 символов'),
+    maxLength: withMessage(maxLength(30), 'Пароль должен содержать максимум 30 символа')
   },
   confirmPassword: {
     required: withMessage(required, 'Поле обязательно для заполнения'),

@@ -8,6 +8,7 @@ export type ButtonVariant =
 | 'text-gray'
 | 'red'
 | 'vk'
+| 'orange'
 
 export type IconPosition = 'left' | 'right'
 
@@ -147,6 +148,15 @@ const handleClick = (event: MouseEvent) => {
     &--long {
         width: 100%;
         max-width: 409px;
+    }
+
+    &--orange {
+        background-color: var(--warning-color);
+        color: var(--warning-dark-text-color);
+
+        &:hover {
+            opacity: 0.5;
+        }
     }
 }
 </style>

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import type { IconName } from './AppIcons.vue'
+import AppIcons from './AppIcons.vue'
 
 export type InputVariant = 'input' | 'textarea' | 'select' | 'password' | 'calendar' | 'editing' | 'email'
 
@@ -9,13 +11,16 @@ const props = defineProps<{
     label?: string,
     placeholder: string,
     disabled?: boolean,
-    required?: boolean
+    required?: boolean,
+    iconName?: IconName,
+    invisibleSelect?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
   (e: 'open-select'): void
   (e: 'toggle-select'): void
+  (e: 'click'): void
 }>()
 
 const onInput = (event: Event) => {
@@ -34,7 +39,6 @@ const isPasswordVisible = ref(false)
 const togglePasswordVisibility = () => {
     isPasswordVisible.value = !isPasswordVisible.value
 }
-
 </script>
 
 <template>
@@ -48,7 +52,9 @@ const togglePasswordVisibility = () => {
             :placeholder="placeholder"
             :disabled="disabled"
             :required="required"
-            class="app-input__field" />
+            class="app-input__field"
+            :class="{ 'app-input__field--if-icon': props.iconName}" />
+            <AppIcons :name="iconName" v-if="iconName" class="app-input__icon--left"/>
 
             <input
             v-if="type === 'email'"
@@ -76,6 +82,7 @@ const togglePasswordVisibility = () => {
             :disabled="disabled"
             :required="required"
             class="app-input__field app-input__field--select"
+            :class="{'app-input__field--invisible-select' : props.invisibleSelect}"
             @click.stop="onSelectClick"
             @mousedown.prevent
             readonly />
@@ -109,10 +116,12 @@ const togglePasswordVisibility = () => {
             :disabled="disabled"
             :required="required"
             class="app-input__field"
-            readonly />
-            <AppIcons v-if="type === 'calendar'" name="calendar" class="app-input__icon" />
+            readonly
+            @click.stop="$emit('click')" />
+            <AppIcons v-if="type === 'calendar'" name="calendar" class="app-input__icon" @click="$emit('click')"/>
 
-            <slot name="dropdown" />
+            <slot name="dropdown"/>
+            <slot name="icon" />
         </div>
         <slot name="errors" />
     </div>
@@ -140,11 +149,27 @@ const togglePasswordVisibility = () => {
         border: 1px solid var(--border-gray);
         border-radius: 8px;
         box-sizing: border-box;
+        position: relative;
+        z-index: 1000;
 
         &::placeholder {
             color: var(--text-secondary);
         }
 
+        &--select {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        &--invisible-select {
+            border: none;
+            padding: 0;
+        }
+
+        &--if-icon {
+            padding-left: 38px;
+        }
     }
 
     &.has-icon .app-input__field {
@@ -213,5 +238,13 @@ const togglePasswordVisibility = () => {
 
 .app-input__field:disabled {
     background-color: var(--other-gray);
+}
+
+.app-input__icon--left {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+
 }
 </style>

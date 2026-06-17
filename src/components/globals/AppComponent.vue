@@ -7,6 +7,8 @@ import FeedbackMessage from '../navigation/feedback/FeedbackMessage.vue'
 import ProfileManagingDropdown from '../navigation/profile/ProfileManagingDropdown.vue'
 
 const props = defineProps<{
+    titleIcon?: string,
+    label?: string,
     iconName?: string,
     textFirstLine?: string,
     textSecondLine?: string,
@@ -14,19 +16,16 @@ const props = defineProps<{
     buttonText?: string,
     stringButtonNeeded?: boolean,
     stringButtonText?: string,
-    tabsNeeded?: boolean
+    tabsNeeded?: boolean,
+    tabs?: {key: string, label: string}[]
 }>()
 
 const emit = defineEmits<{
     (e: 'button-click'): void
+    (e: 'header-click'): void
 }>()
 
-const tabs = [
-    { key: 'objects', label: 'Объекты'},
-    { key: 'checks', label: 'Проверки'}
-]
-
-const activeKey = ref('objects')
+const activeKey = ref(props.tabs?.[0]?.key)
 const onFeedback = ref(false)
 
 const isFeedbackSent = ref(false)
@@ -64,7 +63,7 @@ onBeforeUnmount(() => {
         </aside>
         <div class="app-component__main">
             <header class="app-component__header" ref="dropdownRef">
-                <AppHeader @profile-toggler="profileToggler"/>
+                <AppHeader @profile-toggler="profileToggler" :title-icon="titleIcon" @click="$emit('header-click')" :label="label"/>
                 <ProfileManagingDropdown v-if="onProfile" />
             </header>
             <main class="app-component__content">
@@ -80,8 +79,7 @@ onBeforeUnmount(() => {
                     >{{ tab.label }}</button>
                 </div>
 
-                <slot name="filters-objects" v-if="activeKey === 'objects'"/>
-                <slot name="filters-checks" v-if="activeKey === 'checks'" />
+                <slot name="tab-content" :active-tab="activeKey"/>
 
                 <div class="app-component__zero-state">
                     <AppIcons :name="props.iconName" class="app-component__zero-state--icon" />
@@ -135,6 +133,7 @@ onBeforeUnmount(() => {
     display: flex;
     gap: 32px;
     height: 46px;
+    flex-shrink: 0;
 
     &--item {
         background-color: transparent;
@@ -145,6 +144,7 @@ onBeforeUnmount(() => {
 
         &.active {
             border-bottom: 2px solid var(--primary-main);
+            color: var(--primary-main);
         }
     }
 }

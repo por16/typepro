@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 
 const props = defineProps<{
-    title: string,
+    title?: string,
     showClose?: boolean,
     footerAlign?: 'left' | 'right',
-    overlayVariant?: 'dark-transparent' | 'light'
+    overlayVariant?: 'dark-transparent' | 'light',
+    largeSize?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -14,10 +15,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-     <div class="app-modal__overlay" :class="{ 'app-modal__overlay--light': overlayVariant === 'light', 'app-modal__overlay--dark-transparent': overlayVariant !== 'light' }">
-        <div class="app-modal">
+     <div class="app-modal__overlay" :class="{ 'app-modal__overlay--light': overlayVariant === 'light',
+     'app-modal__overlay--dark-transparent': overlayVariant !== 'light', 'app-modal__overlay--large': largeSize }">
+        <div class="app-modal" :class="{'app-modal--large' : largeSize}">
 
-            <div class="app-modal__header">
+            <div v-if="title" class="app-modal__header">
                 <h3 class="app-modal__title">{{ title }}</h3>
                 <button v-if="showClose" class="app-modal__close" @click="emit('close')">
                     <AppIcons name="close" />
@@ -46,6 +48,7 @@ const emit = defineEmits<{
 <style lang="scss">
 .app-modal__overlay {
     position: fixed;
+    z-index: 1200;
     top: 0;
     left: 0;
     width: 100%;
@@ -53,13 +56,19 @@ const emit = defineEmits<{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 64px 0;
+    box-sizing: border-box;
 
     &--dark-transparent {
         background: rgba(0, 0, 0, 0.5);
     }
     &--light {
         background: var(--other-gray);
+    }
+
+    &--large {
+        padding: 64px 0;
+        overflow-y: scroll;
     }
 }
 
@@ -70,6 +79,11 @@ const emit = defineEmits<{
     max-width: 400px;
     display: flex;
     flex-direction: column;
+    margin: auto; 
+
+    &--large {
+        max-width: 788px;
+    }
 }
 
 .app-modal__header {

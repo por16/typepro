@@ -11,11 +11,12 @@ interface CityItem {
 
 const props = defineProps<{
     type: AutocompleteType
-    label: string
+    label?: string
     placeholder?: string
     modelValue?: string,
     cityFilter?: string,
-    disabled?: boolean
+    disabled?: boolean,
+    customCityArray?: string[]
 }>()
 
 const emit = defineEmits<{
@@ -32,6 +33,11 @@ let debounceTimer: number | null = null
 const filterCities = (query: string): string[] => {
   if (!query.trim()) return []
   const lowerQuery = query.toLowerCase()
+  if (props.customCityArray && props.customCityArray.length) {
+    return props.customCityArray
+      .filter(city => city.toLowerCase().includes(lowerQuery))
+      .slice(0, 5)
+  }
   const citiesList = citiesData as CityItem[]
   return citiesList
     .filter(item => item.city.toLowerCase().includes(lowerQuery))
@@ -75,21 +81,25 @@ const updateSuggestions = async () => {
   } else {
     let results = await fetchAddresses(query)
     suggestions.value = results.map((address: string) => {
-      const commaIndex = address.indexOf(',')
-      if (commaIndex !== -1) {
-        return address.slice(commaIndex + 1).trim()
+      const firstComma = address.indexOf(',')
+      if (firstComma === -1) return address.trim()
+      const secondComma = address.indexOf(',', firstComma + 1)
+      const between = address.slice(firstComma + 1, secondComma)
+      if (between.includes('г ')) {
+        return address.slice(secondComma + 1).trim()
+      } else {
+        return address.slice(firstComma + 1).trim()
       }
-      return address
     }).slice(0, 5)
   }
-  
   isDropdownOpen.value = suggestions.value.length > 0
-  }
+}
 
 
 const onInput = (value: string) => {
   if (props.disabled) return
   inputValue.value = value
+  emit('update:modelValue', value)
   if (debounceTimer) clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
     updateSuggestions()
@@ -148,11 +158,15 @@ onBeforeUnmount(() => {
         :placeholder="placeholder"
         :model-value="inputValue"
         :disabled="disabled"
-        @update:model-value="onInput" />
-        <button class="invisible-button app-autocomplete__icon" @click="focusInput"><AppIcons
-        v-if="type === 'city' && inputValue === ''"
-        name="expand-more"
-        /></button>
+        @update:model-value="onInput"
+        class="app-autocomplete__input">
+          <template #icon>
+            <button class="invisible-button app-autocomplete__icon" @click="focusInput"><AppIcons
+            v-if="type === 'city'"
+            name="expand-more"
+            /></button>
+          </template>
+        </AppInput>
     </div>
     <div class="app-autocomplete__dropdown-wrapper">
       <AppDropdown
@@ -172,14 +186,14 @@ onBeforeUnmount(() => {
   width: 100%;
 }
 
-.app-autocomplete__input-wrapper {
+.app-autocomplete__input {
   position: relative;
 }
 
 .app-autocomplete__icon {
   position: absolute;
   right: 20px;
-  top: 68%;
+  top: 50%;
   transform: translateY(-50%);
   color: var(--text-secondary);
 }
@@ -189,6 +203,6 @@ onBeforeUnmount(() => {
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 3000;
 }
 </style>

@@ -3,21 +3,32 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 
+const props = defineProps<{
+    titleIcon?: string,
+    label?: string
+}>()
+
 const emit = defineEmits<{
     (e: 'profile-toggler'): void
+    (e: 'click'): void
 }>()
 
 const route = useRoute()
 const userStore = useUserStore()
 
 const pageTitle = computed(() => {
-    return route.meta?.title || 'Текущая страница'
+    return props.label || route.meta?.title || 'Текущая страница'
 })
 </script>
 
 <template>
     <div class="header">
-        <h2 class="header--title">{{ pageTitle }}</h2>
+        <div class="header__title">
+            <button class="header__title--button" @click="$emit('click')" v-if="titleIcon">
+                <AppIcons :name="titleIcon"/>
+            </button>
+            <h2>{{ pageTitle }}</h2>
+        </div>
         <button class="user" @click="$emit('profile-toggler')">
             <div class="user--info">
                 <p>{{ userStore.user?.email }}</p>
@@ -38,10 +49,19 @@ const pageTitle = computed(() => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
 
-    &--title {
-        font-size: 20px;
-        font-weight: 500;
+.header__title {
+    display: flex;
+    font-size: 20px;
+    font-weight: 500;
+
+    &--button {
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        margin-right: 12px;
     }
 }
 

@@ -10,7 +10,7 @@ const { data, r$ } = useFormValidation(
   {
     companyName: { type: 'text', required: true, maxLength: 32 },
     email: { type: 'email', required: true, maxLength: 32 },
-    password: { type: 'password', required: true, minLength: 6 }
+    password: { type: 'password', required: true, minLength: 6, maxLength: 30 }
   }
 )
 

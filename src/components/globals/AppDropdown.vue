@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { useFormValidation } from '@/composables/useFormValidation'
 
 type DropdownVariant = 'default' | 'autocomplete'
 
@@ -9,7 +10,8 @@ const props = defineProps<{
     modelValue?: string
     isOpened: boolean,
     showActions?: boolean,
-    disableClickOutside?: boolean
+    disableClickOutside?: boolean,
+    placement?: 'down' | 'up'
 }>()
 
 const emit = defineEmits<{
@@ -24,7 +26,13 @@ const dropdownRef = ref<HTMLElement | null>(null)
 const editingIndex = ref<number | null>(null)
 const editingValue = ref('')
 const isAdding = ref(false)
-const newType = ref('')
+
+const { data, r$ } = useFormValidation(
+  { option: ''},
+  {
+    option: { type: 'text',  maxLength: 32  }
+  }
+)
 
 const displayedOptions = computed(() => {
   if (props.type === 'autocomplete') {
@@ -62,17 +70,17 @@ const handleDelete = (option: string) => {
 
 const startAdding = () => {
   isAdding.value = true
-  newType.value = ''
+  data.option = ''
 }
 
 const cancelAdding = () => {
   isAdding.value = false
-  newType.value = ''
+  data.option = ''
 }
 
 const confirmAdding = () => {
-  if (newType.value.trim()) {
-    emit('add', newType.value.trim())
+  if (data.option.trim()) {
+    emit('add', data.option.trim())
     cancelAdding()
   }
 }
@@ -94,7 +102,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <ul class="app-select" v-if="isOpened" ref="dropdownRef">
+    <ul class="app-select" v-if="isOpened" ref="dropdownRef" :class="{ 'app-select--up': placement === 'up' }">
         <li
         v-for="(option, index) in displayedOptions"
         :key="option"
@@ -132,8 +140,12 @@ onBeforeUnmount(() => {
                 <AppInput
                 type="editing"
                 placeholder="Введите название"
-                v-model="newType"
-                @click.stop />
+                v-model="data.option"
+                @click.stop>
+                    <template #errors>
+                        <p v-for="error of (r$ as any).option?.$errors" :key='error' class="validation-error__message">{{ error }}</p>
+                    </template>
+                </AppInput>
                 <button class="app-select__icon" @click.stop="confirmAdding"><AppIcons name="done" height="16px" width="16px"/></button>
                 <button class="app-select__icon" @click.stop="cancelAdding"><AppIcons name="close" height="16px" width="16px"/></button>
             </div>
@@ -150,12 +162,12 @@ onBeforeUnmount(() => {
 <style lang="scss">
 .app-select {
     position: absolute;
+    z-index: 3000;
     top: 100%;
     left: 0;
     right: 0;
     max-height: 300px;
     background: var(--primary-contast-text);
-    z-index: 1000;
     box-shadow: var(--box-shadow);
     border-radius: 8px;
     color: var(--text-secondary);
@@ -171,6 +183,7 @@ onBeforeUnmount(() => {
         cursor: pointer;
         font-size: 14px;
         line-height: 18px;
+        text-overflow: ellipsis;
 
         &:hover {
             background-color: var(--other-gray);
@@ -229,7 +242,12 @@ onBeforeUnmount(() => {
 
     &__option--autocomplete {
         color: var(--text-primary);
-    }  
+    } 
+    
+    &--up {
+        top: auto;
+        bottom: 100%;
+    }
 }
 
 .app-select__add-trigger {
@@ -262,5 +280,4 @@ onBeforeUnmount(() => {
     width: 16px;
     height: 16px;
 }
-
 </style>

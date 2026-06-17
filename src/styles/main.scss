@@ -11,8 +11,21 @@
   --text-secondary: rgba(154, 156, 156, 1);
 
   --other-gray: rgba(243, 243, 243, 1);
+  --table-header-color: rgba(0, 0, 0, 0.04);
   --divider: rgba(232, 232, 232, 1);
   --border-gray: rgba(213, 213, 213, 1);
+
+  --warning-color: rgba(255, 152, 0, 0.1);
+  --warning-dark-text-color: rgba(102, 60, 0, 1);
+
+  --orange-state-color: rgba(255, 138, 0, 1);
+  --orange-state-background-color: rgba(255, 138, 0, 0.08);
+  --green-state-color: rgba(82, 196, 26, 1);
+  --green-state-background-color: rgba(82, 196, 26, 0.08);
+  --crimson-state-color: rgba(233, 30, 99, 1);
+  --crimson-state-background-color: rgba(233, 30, 99, 0.08);
+  --blue-state-color: rgba(9, 109, 217, 1);
+  --blue-state-background-color: rgba(33, 150, 243, 0.08);
 
   --box-shadow: 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
 }

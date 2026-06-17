@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import Statistics from '@/components/navigation/statistics/Statistics.vue'
+import EditInspectorsQuestionnaire from '@/components/navigation/inspectors/EditInspectorsQuestionnaire.vue'
+import InspectorsQuestionnairePreview from '@/components/navigation/inspectors/InspectorsQuestionnairePreview.vue'
+import Inspector from '@/components/navigation/inspectors/Inspector.vue'
 
 const routes = [
   {
@@ -30,7 +33,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/components/navigation/login/Authorisation.vue'),
+    component: () => import('@/components/navigation/login/Authorization.vue'),
     meta: {
       requiresAuthorisation: false
     }
@@ -87,6 +90,29 @@ const routes = [
       requiresAuthorisation: true,
       title: 'Проверяющие'
     }
+  },
+  {
+    path: '/inspectors/:id',
+    name: 'inspector-info',
+    component: Inspector,
+    meta: {
+      requiresAuthorisation: true,
+    }
+  },
+  {
+    path: '/inspectors/questionnaire/edit',
+    name: 'questionnaire-edit',
+    component: EditInspectorsQuestionnaire,
+    meta: {
+      requiresAuthorisation: true,
+      title: 'Редактирование анкеты'
+    }
+  },
+  {
+    path: '/inspectors/questionnaire/preview',
+    name: 'questionnaire-preview',
+    component: InspectorsQuestionnairePreview,
+    meta: { requiresAuthorisation: true }
   },
   {
     path: '/employees',

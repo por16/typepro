@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 import { useRegle } from '@regle/core'
-import { required, minLength, email as emailRule, withMessage, maxLength, numeric, domain, startsWith } from '@regle/rules'
+import { required, minLength, email as emailRule, withMessage, maxLength, numeric, url, startsWith } from '@regle/rules'
 
 type FieldType = 'text' | 'email' | 'password'
 
@@ -41,10 +41,10 @@ export function useFormValidation<T extends Record<string, any>>(initialData: T,
       fieldRules.startsWith = withMessage(startsWith('8'), `Поле должно начинаться с 8`)
     }
     if (config.domain) {
-      fieldRules.domain = withMessage(domain, 'Введите корректную ссылку')
+      fieldRules.domain = withMessage(url, 'Введите корректную ссылку')
     }
     if (config.vklink) {
-      fieldRules.startsWith = withMessage(startsWith('vk.com/'), `Поле должно начинаться с "vk.com/"`)
+      fieldRules.startsWith = withMessage(startsWith('https://vk.ru/'), `Поле должно начинаться с "https://vk.ru/"`)
     }
     
     rules[fieldName] = fieldRules

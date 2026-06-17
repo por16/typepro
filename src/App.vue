@@ -32,7 +32,7 @@ onMounted(() => {
 .validation-error__message {
   color: rgba(244, 67, 54, 1);
   font-size: 12px;
-  padding: 0;
+  padding: 4px 0 0 0;
   margin: 0;
 }
 
@@ -47,4 +47,9 @@ onMounted(() => {
   height: 16px;
   width: 16px;
 }
+
+.text-underlined {
+  text-decoration: underline;
+}
+
 </style>

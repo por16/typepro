@@ -13,9 +13,22 @@
   "dependencies": {
     "@regle/core": "^1.26.0",
     "@regle/rules": "^1.26.0",
+    "@tiptap/extension-bold": "^3.26.0",
+    "@tiptap/extension-collaboration": "^3.26.0",
+    "@tiptap/extension-highlight": "^3.26.0",
+    "@tiptap/extension-italic": "^3.26.0",
+    "@tiptap/extension-strike": "^3.26.0",
+    "@tiptap/extension-text-align": "^3.26.0",
+    "@tiptap/extension-underline": "^3.26.0",
+    "@tiptap/extensions": "^3.26.0",
+    "@tiptap/pm": "^3.26.0",
+    "@tiptap/starter-kit": "^3.26.0",
+    "@tiptap/vue-3": "^3.26.0",
     "pinia": "^3.0.4",
     "vue": "^3.5.32",
-    "vue-router": "^5.0.4"
+    "vue-router": "^5.0.4",
+    "y-webrtc": "^10.3.0",
+    "yjs": "^13.6.31"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
