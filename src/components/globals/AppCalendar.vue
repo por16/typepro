@@ -6,7 +6,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    (e: 'update:modelValue'): void
+    (e: 'update:modelValue', value: string): void 
     (e: 'close'): void
 }>()
 
