@@ -23,6 +23,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'button-click'): void
     (e: 'header-click'): void
+    (e: 'lower-button-click'): void
 }>()
 
 const activeKey = ref(props.tabs?.[0]?.key)
@@ -88,7 +89,7 @@ onBeforeUnmount(() => {
                         <span>{{ props.textSecondLine }}</span>
                     </p>
                     <AppButton variant="green" v-if="props.buttonNeeded" class="app-component__zero-state--button" @click="emit('button-click')">{{ props.buttonText }}</AppButton>
-                    <AppButton variant="text-green" v-if="props.stringButtonNeeded">{{ props.stringButtonText }}</AppButton>
+                    <AppButton variant="text-green" v-if="props.stringButtonNeeded" @click="emit('lower-button-click')">{{ props.stringButtonText }}</AppButton>
                 </div>
             </main>
         </div>

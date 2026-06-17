@@ -38,7 +38,8 @@ const handleInspectorClick = (id: string) => {
     buttonText="Добавить проверяющего"
     :stringButtonNeeded="true"
     stringButtonText="Пригласить с помощью анкеты"
-    @button-click="onButtonClick = true" />
+    @button-click="onButtonClick = true"
+    @lower-button-click="router.push('/inspectors/questionnaire/edit')" />
     <NewInspector v-if="onButtonClick" @close="onButtonClick = false" />
 
     <AppComponent

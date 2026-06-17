@@ -206,6 +206,7 @@ const togglePasswordVisibility = () => {
 
     &__password-toggle {
         position: absolute;
+        z-index: 1001;
         right: 12px;
         top: 50%;
         transform: translateY(-50%);

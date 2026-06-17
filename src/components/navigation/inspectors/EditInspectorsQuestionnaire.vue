@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { computed } from 'vue'
 import AppComponent from '@/components/globals/AppComponent.vue'
 import { useRouter } from 'vue-router'
 import { useLocalStorage } from '@/composables/useLocalStorage'

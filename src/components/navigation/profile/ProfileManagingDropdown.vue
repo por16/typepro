@@ -33,6 +33,7 @@ const logout = () => {
 <style lang="scss">
 .profile-dropdown__wrapper {
     position: absolute;
+    z-index: 5000;
     top: 130%;
     transform: translateY(-50%);
     right: 0;

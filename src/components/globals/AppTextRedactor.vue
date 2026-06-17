@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import * as Y from 'yjs'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -29,10 +30,17 @@ const editor = useEditor({
         })
     ],
     onUpdate: ({ editor }) => {
-        emit('update:modelValue', editor.getHTML())
+        const newHtml = editor.getHTML()
+        setHtml(newHtml)
+        emit('update:modelValue', newHtml)
     },
 })
 
+watch(() => props.modelValue, (newContent) => {
+    if (editor.value && newContent !== editor.value.getHTML()) {
+        editor.value.commands.setContent(newContent)
+    }
+})
 </script>
 
 <template>
