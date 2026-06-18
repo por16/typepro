@@ -112,6 +112,7 @@ onBeforeUnmount(() => {
 
 .app-component__main {
     flex: 1;
+    overflow: hidden;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

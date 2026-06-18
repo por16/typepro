@@ -358,6 +358,7 @@ const saveEdit = () => {
             </section>
 
             <section v-if="activeTab === 'checks-history'">
+                <div class="inspector-checks__table-wrapper">
                 <table class="inspector-checks__table">
                     <thead class="inspector-checks__header">
                         <td class="inspector-checks__header--object">
@@ -400,6 +401,7 @@ const saveEdit = () => {
                         <td><AppStatus :state="line.state"/></td>
                     </tr>
                 </table>
+                </div>
 
                 <div class="inspector-checks__pagination">
                     <span class="inspector-checks__pagination--displayed">
@@ -486,9 +488,15 @@ const saveEdit = () => {
     }
 }
 
-.inspector-checks__table {
-    margin: 28px 0 24px 0;
+.inspector-checks__table-wrapper {
+    width: 100%;
     overflow-x: auto;
+    margin: 28px 0 24px 0;
+}
+
+.inspector-checks__table {
+    min-width: max-content;
+    width: 100%;
 }
 
 .inspector-checks__header {
