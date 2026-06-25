@@ -30,7 +30,7 @@ const isAdding = ref(false)
 const { data, r$ } = useFormValidation(
   { option: ''},
   {
-    option: { type: 'text',  maxLength: 32  }
+    option: { type: 'text' }
   }
 )
 
@@ -207,6 +207,9 @@ onBeforeUnmount(() => {
 
     &__option-label {
         flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     &__actions {

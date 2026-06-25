@@ -50,7 +50,7 @@ const roles = ['Менеджер контроля качества', 'Босс',
             <AppInput type="select" label="Роль" placeholder="Выберите роль" v-model="role" 
             @open-select="isOpened = true" @toggle-select="isOpened = !isOpened">
                 <template #dropdown>
-                    <AppDropdown type="default" :options="roles" :isOpened="isOpened" 
+                    <AppDropdown type="default" :options="roles" :isOpened="isOpened" :modelValue="role"
                     @close="isOpened = false" @update:modelValue="role = $event"/>
                 </template>
             </AppInput>

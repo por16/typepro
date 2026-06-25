@@ -19,7 +19,8 @@ const emit = defineEmits<{
                 <AppIcons name="task-templates" class="menu__navigation--icon" />
                 <span>Шаблоны задач</span>
             </router-link>
-            <router-link to="/inspectors" class="menu__navigation--item">
+            <router-link to="/inspectors" class="menu__navigation--item" 
+            :class="{ 'router-link-active': $route.path.startsWith('/inspectors') }">
                 <AppIcons name="inspectors" class="menu__navigation--icon" />
                 <span>Проверяющие</span>
             </router-link>

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import type { IconName } from './AppIcons.vue'
 import AppIcons from './AppIcons.vue'
 
-export type InputVariant = 'input' | 'textarea' | 'select' | 'password' | 'calendar' | 'editing' | 'email'
+export type InputVariant = 'input' | 'textarea' | 'select' | 'password' | 'calendar' | 'editing' | 'email' | 'file'
 
 const props = defineProps<{
     type: InputVariant,
@@ -13,7 +13,8 @@ const props = defineProps<{
     disabled?: boolean,
     required?: boolean,
     iconName?: IconName,
-    invisibleSelect?: boolean
+    invisibleSelect?: boolean,
+    squareShape?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -21,6 +22,7 @@ const emit = defineEmits<{
   (e: 'open-select'): void
   (e: 'toggle-select'): void
   (e: 'click'): void
+  (e: 'blur'): void
 }>()
 
 const onInput = (event: Event) => {
@@ -39,16 +41,30 @@ const isPasswordVisible = ref(false)
 const togglePasswordVisibility = () => {
     isPasswordVisible.value = !isPasswordVisible.value
 }
+
+const handleFileChange = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    const file = target.files?.[0]
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const result = e.target?.result as string
+            emit('update:modelValue', result)
+        }
+        reader.readAsDataURL(file)
+    }
+}
 </script>
 
 <template>
     <div class="app-input" :class="{ 'app-input--editing': type === 'editing' }">
         <span v-if="type !== 'editing'" class="app-input__label">{{ label }}</span>
-        <div class="app-input__wrapper" :class="{ 'has-icon': type === 'select' }">
+        <div class="app-input__wrapper" :class="{ 'has-icon': type === 'select', 'has-right-icon': iconName }">
             <input
             v-if="type === 'input' || type === 'editing'"
             :value="modelValue"
             @input="onInput"
+            @blur="$emit('blur')"
             :placeholder="placeholder"
             :disabled="disabled"
             :required="required"
@@ -82,7 +98,10 @@ const togglePasswordVisibility = () => {
             :disabled="disabled"
             :required="required"
             class="app-input__field app-input__field--select"
-            :class="{'app-input__field--invisible-select' : props.invisibleSelect}"
+            :class="{
+                'app-input__field--invisible-select' : props.invisibleSelect,
+                'app-input__field--square-shape' : props.squareShape
+            }"
             @click.stop="onSelectClick"
             @mousedown.prevent
             readonly />
@@ -117,8 +136,22 @@ const togglePasswordVisibility = () => {
             :required="required"
             class="app-input__field"
             readonly
-            @click.stop="$emit('click')" />
-            <AppIcons v-if="type === 'calendar'" name="calendar" class="app-input__icon" @click="$emit('click')"/>
+            @click.stop="$emit('click')"
+            @blur="$emit('blur')" />
+            <AppIcons v-if="type === 'calendar' && !modelValue" name="calendar" class="app-input__icon" @click="$emit('click')"/>
+            <button v-if="type === 'calendar' && modelValue" class="app-input__button--clear"
+            @click.stop="$emit('update:modelValue', '')">
+                <AppIcons name="close" :width="20" :height="20"/>
+            </button>
+
+            <label v-if="type === 'file'" for="file" class="app-input__file--label">Загрузить</label>
+            <input
+            v-if="type === 'file'"
+            type="file"
+            accept=".jpg, .jpeg, .png, .svg"
+            id="file"
+            class="app-input__file--input"
+            @change="handleFileChange" />
 
             <slot name="dropdown"/>
             <slot name="icon" />
@@ -143,7 +176,9 @@ const togglePasswordVisibility = () => {
 
     &__field {
         width: 100%;
-        padding: 11px 14px;
+        padding: 11px 28px 11px 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-size: 14px;
         background-color: transparent;
         border: 1px solid var(--border-gray);
@@ -170,9 +205,19 @@ const togglePasswordVisibility = () => {
         &--if-icon {
             padding-left: 38px;
         }
+
+        &--square-shape {
+            border-radius: 0;
+            height: 35px;
+            border: none;
+        }
     }
 
     &.has-icon .app-input__field {
+        padding-right: 40px;
+    }
+
+    &.has-right-icon .app-input__field {
         padding-right: 40px;
     }
 
@@ -237,6 +282,24 @@ const togglePasswordVisibility = () => {
     }
 }
 
+.app-input__button--clear {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+    z-index: 1001;
+
+    &:hover {
+        opacity: 0.5;
+    }
+}
+
 .app-input__field:disabled {
     background-color: var(--other-gray);
 }
@@ -247,5 +310,35 @@ const togglePasswordVisibility = () => {
     top: 50%;
     transform: translateY(-50%);
 
+}
+
+.app-input__file {
+
+    &--label {
+        width: 409px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-gray);
+
+        &:hover {
+            background-color:rgba(250, 250, 250, 1);
+        }
+    }
+    
+    &--input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
 }
 </style>

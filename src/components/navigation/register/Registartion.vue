@@ -8,7 +8,7 @@ import { useFormValidation } from '@/composables/useFormValidation'
 const { data, r$ } = useFormValidation(
   { companyName: '', email: '', password: '' },
   {
-    companyName: { type: 'text', required: true, maxLength: 32 },
+    companyName: { type: 'text', required: true },
     email: { type: 'email', required: true, maxLength: 32 },
     password: { type: 'password', required: true, minLength: 6, maxLength: 30 }
   }

@@ -12,7 +12,7 @@ const emit = defineEmits<{
 <template>
     <AppModals title="Удалить тип проверки" :showClose="true" footerAlign="right" @close="$emit('close')">
         <template #content>
-            <p>Вы уверены, что хотите удалить<br>тип проверки «{{props.type}}»?</p>
+            <p class="word-break">Вы уверены, что хотите удалить<br>тип проверки «{{props.type}}»?</p>
         </template>
 
         <template #footer>

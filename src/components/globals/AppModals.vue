@@ -56,6 +56,7 @@ const emit = defineEmits<{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 64px 0;
     box-sizing: border-box;
 
@@ -68,6 +69,7 @@ const emit = defineEmits<{
 
     &--large {
         padding: 64px 0;
+        justify-content: flex-start;
         overflow-y: scroll;
     }
 }
@@ -79,7 +81,6 @@ const emit = defineEmits<{
     max-width: 400px;
     display: flex;
     flex-direction: column;
-    margin: auto; 
 
     &--large {
         max-width: 788px;

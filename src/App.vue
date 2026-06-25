@@ -52,4 +52,8 @@ onMounted(() => {
   text-decoration: underline;
 }
 
+.word-break {
+  word-wrap: break-word;
+  white-space: normal;
+}
 </style>

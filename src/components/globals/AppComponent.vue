@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
 
                 <slot name="tab-content" :active-tab="activeKey"/>
 
-                <div class="app-component__zero-state">
+                <div v-if="props.iconName || props.textFirstLine" class="app-component__zero-state">
                     <AppIcons :name="props.iconName" class="app-component__zero-state--icon" />
                     <p class="app-component__zero-state--text text--light-gray">
                         <span>{{ props.textFirstLine }}</span>

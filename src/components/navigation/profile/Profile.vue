@@ -31,11 +31,16 @@ const hidePassword = computed(() => {
                     label="Информация о компании"
                     :rows="[
                         { label: 'Название', value: companyStore.company.value.name || 'Не указано' },
-                        { label: 'Логотип', value: companyStore.company.value.logo || 'Нет' },
+                        { label: 'Логотип', value: companyStore.company.value.logo || 'Нет', key: 'logo' },
                         { label: `Краткое описание <br> деятельности`, value: companyStore.company.value.activities || 'Не указано' },
                         { label: 'Ссылка на сайт', value: companyStore.company.value.siteLink || 'Нет' },
                         { label: 'Ссылка на группу VK', value: companyStore.company.value.VKGroupLink || 'Нет' },
-                    ]"/>
+                    ]">
+                        <template #cell-logo="{ row }">
+                            <img v-if="row.value" :src="row.value" class="app-profile__logo" alt="Логотип компании" />
+                            <span v-else>Нет</span>
+                        </template>
+                    </AppInfoTable>
                 </div>
 
                 <div class="app-profile__buttons">

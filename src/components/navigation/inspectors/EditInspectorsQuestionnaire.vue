@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
 import AppComponent from '@/components/globals/AppComponent.vue'
 import { useRouter } from 'vue-router'
 import { useLocalStorage } from '@/composables/useLocalStorage'
@@ -10,7 +9,7 @@ import { useQuestionnaireStorage } from '@/composables/useQuestionnaireStorage'
 const companyStore = useLocalStorage()
 const router = useRouter()
 
-const link = 'https://taipro.ru/companyname=' + companyStore.company.value.name + '&i…'
+const link = 'https://taipro.ru/companyname=bustdota2&i…'
 
 const copyToClipboard = async (text: string): Promise<void> => {
   try {
@@ -26,6 +25,7 @@ const openInNewTab = () => {
   window.open(routeUrl.href, '_blank')
 }
 </script>
+
 <template>
     <AppComponent label="Редактирование анкеты" title-icon="go-back" @header-click="router.push('/inspectors')">
         <template #content>
@@ -36,9 +36,9 @@ const openInNewTab = () => {
                 </div>
 
                 <div class="questionnaire__right-buttons">
-                    <AppButton variant="text-gray" class="questionnaire__right-buttons--item" @click="openInNewTab">Предпросмотр</AppButton>
-                    <AppButton variant="bordered" class="questionnaire__right-buttons--item">Отмена</AppButton>
-                    <AppButton variant="green" class="questionnaire__right-buttons--item">Сохранить</AppButton>
+                    <AppButton variant="text-gray" class="questionnaire__right-buttons--item" @click="router.push('/inspectors/questionnaire/preview')">Предпросмотр</AppButton>
+                    <AppButton variant="bordered" class="questionnaire__right-buttons--item" @click="router.push('/inspectors')">Отмена</AppButton>
+                    <AppButton variant="green" class="questionnaire__right-buttons--item" @click="router.push('/inspectors')">Сохранить</AppButton>
                 </div>
             </section>
 

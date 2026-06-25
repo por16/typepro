@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import * as Y from 'yjs'
-import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { useEditor, EditorContent, Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { WebrtcProvider } from 'y-webrtc'
 import AppIcons from './AppIcons.vue'
 import Highlight from '@tiptap/extension-highlight'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { useQuestionnaireStorage } from '@/composables/useQuestionnaireStorage.ts'
+import AppDropdown from './AppDropdown.vue'
 
 const ydoc = new Y.Doc()
 const provider = new WebrtcProvider('typepro — копия', ydoc)
@@ -22,6 +23,19 @@ const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void
 }>()
 
+const isDropdownOpened = ref(false)
+
+const marking = ref('Абзац')
+
+const updateMarking = () => {
+    if (!editor.value) return
+    if (editor.value.isActive('heading', { level: 1 })) {
+        marking.value = 'Заголовок'
+    } else if (editor.value.isActive('paragraph')) {
+        marking.value = 'Абзац'
+    }
+}
+
 const editor = useEditor({
     content: props.modelValue,
     extensions: [StarterKit, Highlight,
@@ -33,7 +47,11 @@ const editor = useEditor({
         const newHtml = editor.getHTML()
         setHtml(newHtml)
         emit('update:modelValue', newHtml)
+        updateMarking()
     },
+    onSelectionUpdate: ({ editor }) => {
+        updateMarking()
+    }
 })
 
 watch(() => props.modelValue, (newContent) => {
@@ -41,22 +59,37 @@ watch(() => props.modelValue, (newContent) => {
         editor.value.commands.setContent(newContent)
     }
 })
+
+watch(marking, (newVal) => {
+    if (!editor.value) return
+    if (newVal === 'Абзац') {
+        editor.value.chain().focus().setParagraph().run()
+    } else if (newVal === 'Заголовок') {
+        editor.value.chain().focus().toggleHeading({ level: 1 }).run()
+    }
+})
 </script>
 
 <template>
     <div class="text-redactor__header">
         <div class="text-redactor__section text-redactor__section--first">
-            <button class="text-redactor__section--button" @click="editor?.chain().focus().undo().run()">
+            <button class="text-redactor__section--button" @click="editor?.chain().focus().undo().run()" :disabled="!editor?.can().undo()">
                 <AppIcons name="undo" class="text-redactor__section--icon"/>
             </button>
-            <button class="text-redactor__section--button" @click="editor?.chain().focus().redo().run()">
+            <button class="text-redactor__section--button" @click="editor?.chain().focus().redo().run()" :disabled="!editor?.can().redo()">
                 <AppIcons name="redo" class="text-redactor__section--icon"/>
             </button>
         </div>
 
         <div class="text-redactor__section text-redactor__section--second">
-            <span>Абзац</span>
-            <AppIcons name="expand-more" />
+            <AppInput type="select" @open-select="isDropdownOpened = true" 
+            v-model="marking" square-shape class="text-redactor__section--second-input">
+                <template #dropdown>
+                    <AppDropdown type="default" :options="['Абзац', 'Заголовок']" 
+                    :isOpened="isDropdownOpened" @update:model-value="marking = $event" @close="isDropdownOpened = false"
+                    placement="up"/>
+                </template>
+            </AppInput>
         </div>
 
         <div class="text-redactor__section text-redactor__section--third">
@@ -68,7 +101,7 @@ watch(() => props.modelValue, (newContent) => {
             @click="editor?.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor?.isActive('underline') }">U</button>
             <button class="text-redactor__section--button text-redactor__section--striked"
             @click="editor?.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor?.isActive('strike') }">S</button>
-            <button class="text-redactor__section--button">
+            <button class="text-redactor__section--button" @click="editor?.chain().focus().toggleBlockquote().run()">
                 <AppIcons name="quotes" />
             </button>
             <button class="text-redactor__section--button text-redactor__section--highlighted"
@@ -149,6 +182,12 @@ watch(() => props.modelValue, (newContent) => {
         &:hover {
             opacity: 0.5;
         }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+            pointer-events: none;
+        }
     }
 
     &--icon {
@@ -163,10 +202,11 @@ watch(() => props.modelValue, (newContent) => {
 
     &--second {
         width: 100px;
-        justify-content: space-between;
-        padding: 0 8px;
         cursor: pointer;
-        font-size: 14px;
+    }
+
+    &--second-input {
+        transform: translateY(-4px);
     }
 
     &--third {
@@ -196,6 +236,12 @@ watch(() => props.modelValue, (newContent) => {
 
     &--fourth {
         padding: 0 10px;
+    }
+
+    &--fifth {
+        flex: 1; 
+        display: flex;
+        justify-content: center;
     }
 }
 
@@ -236,6 +282,19 @@ watch(() => props.modelValue, (newContent) => {
 
     mark {
         background-color: rgba(20, 184, 144, 0.5);
+    }
+
+    h1 {
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    blockquote {
+        border-left: 3px solid var(--border-gray);
+        padding-left: 1rem;
+        margin: 1.5rem 0;
+        color: var(--text-secondary);
+        font-style: italic;
     }
 }
 

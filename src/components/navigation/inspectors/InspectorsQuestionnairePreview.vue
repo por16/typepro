@@ -17,7 +17,7 @@ const { data, r$ } = useFormValidation(
     name: { type: 'text', required: true, maxLength: 32 },
     email: { type: 'email', required: true, maxLength: 32 },
     phone: { type: 'text',required: true, isNumber: true, maxLength: 11, minLength: 11 },
-    vk: { type: 'text', required: true, domain: true, vklink: true },
+    vk: { type: 'text', required: true, vklink: true },
     birthDate: { type: 'text', required: true }
   }
 )
@@ -26,19 +26,13 @@ const city = ref('')
 const address = ref('')
 
 const isCityValid = computed(() => {
-    let valid = true
-    if(fields.value.city) {
-        valid = city.value !== '' ? true : false
-    }
-    return valid
+    if (!fields.value.city) return true
+    return city.value !== ''
 })
 
 const isAddressValid = computed(() => {
-    let valid = true
-    if(fields.value.address) {
-        valid = address.value !== '' ? true : false
-    }
-    return valid
+    if (!fields.value.address) return true
+    return address.value !== ''
 })
 
 const isBirthDateValid = computed(() => {
@@ -47,21 +41,13 @@ const isBirthDateValid = computed(() => {
 })
 
 const isPhoneValid = computed(() => {
-    let valid = true
-    if(fields.value.phoneNumber) {
-        valid = data.phone !== '' ? true : false
-    }
-    if((r$ as any).phone?.$errors.length === 0) { valid = true }
-    return valid
+    if (!fields.value.phoneNumber) return true
+    return data.phone !== '' && (r$ as any).phone?.$errors.length === 0
 })
 
 const isVKValid = computed(() => {
-    let valid = true
-    if(fields.value.vk) {
-        valid = data.vk !== '' ? true : false
-    }
-    if((r$ as any).vk?.$errors.length === 0) { valid = true }
-    return valid
+    if (!fields.value.vk) return true
+    return data.vk !== '' && (r$ as any).vk?.$errors.length === 0
 })
 
 const selectedDate = ref('')
@@ -112,7 +98,7 @@ const isFormValid = computed(() => {
     (r$ as any).email?.$errors.length === 0 &&
     (r$ as any).name?.$errors.length === 0 &&
     (r$ as any).surname?.$errors.length === 0 &&
-    isCityValid && isAddressValid && isBirthDateValid && isPhoneValid && isVKValid
+    isCityValid.value && isAddressValid.value && isBirthDateValid.value && isPhoneValid.value && isVKValid.value
 
 })
 
@@ -132,7 +118,8 @@ onBeforeUnmount(() => {
     <AppModals overlay-variant="light" large-size footer-align="left">
         <template #content>
             <section class="questionnaire-preview__content">
-                <img v-if="companyStore.company.value.logo" :src="companyStore.company.value.logo" alt="Логотип компании">
+                <img v-if="companyStore.company.value.logo" :src="companyStore.company.value.logo" 
+                alt="Логотип компании" class="questionnaire-preview__content--logo app-profile__logo">
 
                 <div v-html="html"></div>
 
@@ -159,7 +146,7 @@ onBeforeUnmount(() => {
 
                     <div ref="calendarWrapper" class="questionnaire-preview__inputs--element">
                     <AppInput v-if="fields.birthDate" type="calendar" label="Дата рождения" placeholder="ДД.ММ.ГГ" v-model="displayDate"
-                    class="questionnaire-preview__inputs--short" @click="toggleCalendar">
+                    class="questionnaire-preview__inputs--short" @click="toggleCalendar" >
                         <template #dropdown>
                             <AppCalendar v-if="isCalendarOpen" v-model="selectedDate" @close="isCalendarOpen = false" />
                         </template>
@@ -236,6 +223,10 @@ onBeforeUnmount(() => {
 
     p {
         margin-top: 10px;
+    }
+
+    &--logo {
+        margin-bottom: 32px;
     }
 }
 

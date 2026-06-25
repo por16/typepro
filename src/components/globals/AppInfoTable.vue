@@ -12,9 +12,9 @@ const slots = defineSlots()
         <div class="app-infotable">
             <div v-for="(row, index) in rows" :key="index" class="app-infotable-line">
                 <span class="app-infotable-line--left text--light-gray" v-html="row.label"></span>
-                <slot :name="`cell-${row.key || index}`" :row="row">
-          {{ row.value }}
-        </slot>
+                <slot :name="`cell-${row.key || index}`" :row="row" >
+                    <span class="app-infotable-line--right">{{ row.value }}</span>
+                </slot>
             </div>
         </div>
     </div>
@@ -56,6 +56,12 @@ const slots = defineSlots()
             display: inline-block;
             min-width: 315px;
             max-width: 409px;
+        }
+
+        &--right {
+            width: 317px;
+            word-wrap: break-word;
+            white-space: normal;
         }
     }
 }

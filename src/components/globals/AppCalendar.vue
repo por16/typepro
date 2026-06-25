@@ -8,6 +8,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void 
     (e: 'close'): void
+    (e: 'mousedown'): void
 }>()
 
 const today = new Date()
@@ -158,6 +159,7 @@ const nextMonth = () => {
                'app-calendar__days--selected': isSelected(day),
                'app-calendar__days--other': !day.isCurrentMonth
             }"
+            :disabled="!day.isCurrentMonth"
             @click="selectDate(day)">
                 {{ day.date }}
             </button>
@@ -185,10 +187,18 @@ const nextMonth = () => {
     &--month-year {
         display: flex;
         align-items: flex-end;
+
+        span {
+            padding-bottom: 0.9px;
+            font-size: 14px;
+        }
     }
+
     &--select {
         margin-left: 10px;
         width: 70px;
+        display: flex;
+        align-items: center;
     }
 
     button {

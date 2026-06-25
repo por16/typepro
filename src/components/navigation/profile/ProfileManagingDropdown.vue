@@ -36,7 +36,7 @@ const logout = () => {
     z-index: 5000;
     top: 130%;
     transform: translateY(-50%);
-    right: 0;
+    right: 50px;
     padding: 4px 0;
     min-width: 146px;
     background-color: var(--primary-contast-text);

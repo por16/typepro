@@ -31,7 +31,7 @@ export function useFormValidation<T extends Record<string, any>>(initialData: T,
       fieldRules.minLength = withMessage(minLength(config.minLength), `Пароль должен содержать минимум ${config.minLength} символов`)
     }
     if (config.minLength) {
-      fieldRules.minLength = withMessage(minLength(config.minLength), `Пароль должен содержать минимум ${config.minLength} символов`)
+      fieldRules.minLength = withMessage(minLength(config.minLength), `Минимум ${config.minLength} символов`)
     }
     if (config.maxLength) {
       fieldRules.maxLength = withMessage(maxLength(config.maxLength), `Максимум ${config.maxLength} символов`)
@@ -44,7 +44,10 @@ export function useFormValidation<T extends Record<string, any>>(initialData: T,
       fieldRules.domain = withMessage(url, 'Введите корректную ссылку')
     }
     if (config.vklink) {
-      fieldRules.startsWith = withMessage(startsWith('https://vk.ru/'), `Поле должно начинаться с "https://vk.ru/"`)
+      fieldRules.vk = withMessage(((value: string) => {
+        if (!value) return true
+        return value.includes('vk.com') || value.includes('vk.ru')
+      }) as any, 'Ссылка должна вести на страницу ВКонтакте')
     }
     
     rules[fieldName] = fieldRules

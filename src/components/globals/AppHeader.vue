@@ -53,6 +53,8 @@ const pageTitle = computed(() => {
 
 .header__title {
     display: flex;
+    align-items: center;
+    height: 24px;
     font-size: 20px;
     font-weight: 500;
 

@@ -40,6 +40,8 @@ export type IconName =
 | 'align-right'
 | 'align-justify'
 | 'arrow-down'
+| 'dark-delete'
+| 'arrow-up'
 
 const props = defineProps<{
   name: IconName
@@ -129,6 +131,10 @@ const props = defineProps<{
     <svg v-if="name === 'align-justify'" :width="width || 20" :height="height || 20" :class="class" viewBox="0 0 50.000000 50.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"><path d="M20 450 c0 -19 7 -20 230 -20 223 0 230 1 230 20 0 19 -7 20 -230 20 -223 0 -230 -1 -230 -20z"/><path d="M20 350 c0 -19 7 -20 230 -20 223 0 230 1 230 20 0 19 -7 20 -230 20 -223 0 -230 -1 -230 -20z"/><path d="M20 250 c0 -19 7 -20 230 -20 223 0 230 1 230 20 0 19 -7 20 -230 20 -223 0 -230 -1 -230 -20z"/><path d="M20 150 c0 -19 7 -20 230 -20 223 0 230 1 230 20 0 19 -7 20 -230 20 -223 0 -230 -1 -230 -20z"/><path d="M20 50 c0 -19 7 -20 230 -20 223 0 230 1 230 20 0 19 -7 20 -230 20 -223 0 -230 -1 -230 -20z"/></g></svg>
 
     <svg v-if="name === 'arrow-down'" :width="width || 18" :height="height || 18" :class="class" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_13651_5645)"><path d="M15 9L13.9425 7.9425L9.75 12.1275V3H8.25V12.1275L4.065 7.935L3 9L9 15L15 9Z" fill="black" fill-opacity="0.26"/></g><defs><clipPath id="clip0_13651_5645"><rect width="18" height="18" fill="white"/></clipPath></defs></svg>
+
+    <svg v-if="name === 'dark-delete'" :width="width || 32" :height="height || 32" :class="class" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="16" fill="#141A18" fill-opacity="0.6"/><path d="M11.9997 20.6667C11.9997 21.4 12.5997 22 13.333 22H18.6663C19.3997 22 19.9997 21.4 19.9997 20.6667V12.6667H11.9997V20.6667ZM20.6663 10.6667H18.333L17.6663 10H14.333L13.6663 10.6667H11.333V12H20.6663V10.6667Z" fill="#E3E1E1"/></svg>
+
+    <svg v-if="name === 'arrow-up'" :width="width || 18" :height="height || 18" :class="class" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(-180)"><g clip-path="url(#clip0_13723_5645)"><path d="M15 9L13.9425 7.9425L9.75 12.1275V3H8.25V12.1275L4.065 7.935L3 9L9 15L15 9Z" fill="black" fill-opacity="0.26"></path></g><defs><clipPath id="clip0_13723_5645"><rect width="18" height="18" fill="white"></rect></clipPath></defs></svg>
 
 </template>
 

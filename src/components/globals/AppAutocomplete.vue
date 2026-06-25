@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, onBeforeUnmount } from 'vue'
+import { ref, watch, onBeforeUnmount, computed } from 'vue'
 import citiesData from '@/assets/data/russia-cities.json'
 
 type AutocompleteType = 'city' | 'address'
@@ -28,6 +28,16 @@ const inputValue = ref(props.modelValue || '')
 const isDropdownOpen = ref(false)
 const suggestions = ref<string[]>([])
 
+const previousValidValue = ref(props.modelValue || '')
+
+const allCities = computed(() => {
+  if (props.type !== 'city') return []
+  if (props.customCityArray?.length) {
+    return props.customCityArray
+  }
+  return (citiesData as CityItem[]).map(item => item.city)
+})
+
 let debounceTimer: number | null = null
 
 const filterCities = (query: string): string[] => {
@@ -39,10 +49,15 @@ const filterCities = (query: string): string[] => {
       .slice(0, 5)
   }
   const citiesList = citiesData as CityItem[]
-  return citiesList
-    .filter(item => item.city.toLowerCase().includes(lowerQuery))
-    .slice(0, 5)
-    .map(item => `${item.city}, ${item.region}`)
+  let results = citiesList.filter(item => item.city.toLowerCase().includes(lowerQuery))
+  if (results.length > 0) {
+    return results.slice(0, 5).map(item => `${item.city}, ${item.region}`)
+  }
+  results = citiesList.filter(item => {
+    const fullString = `${item.city}, ${item.region}`.toLowerCase()
+    return fullString.includes(lowerQuery)
+  })
+  return results.slice(0, 5).map(item => `${item.city}, ${item.region}`)
 }
 
 const fetchAddresses = async (query: string) => {
@@ -99,11 +114,28 @@ const updateSuggestions = async () => {
 const onInput = (value: string) => {
   if (props.disabled) return
   inputValue.value = value
-  emit('update:modelValue', value)
   if (debounceTimer) clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
     updateSuggestions()
   }, 150)
+}
+
+const onBlur = () => {
+  if (props.disabled || props.type !== 'city') return
+  if (!inputValue.value) {
+    previousValidValue.value = ''
+    inputValue.value = ''
+    emit('update:modelValue', '')
+    return
+  }
+  const isValid = allCities.value.some(
+    city => city.toLowerCase() === inputValue.value.toLowerCase()
+  )
+  if (!isValid) {
+    inputValue.value = previousValidValue.value
+    emit('update:modelValue', previousValidValue.value)
+  }
+  console.log('BLUR triggered')
 }
 
 const focusInput = () => {
@@ -119,10 +151,12 @@ const onSelectOption = (selected: string) => {
     const parts = selected.split(',')
     const cityName = parts[0]?.trim() || selected
     inputValue.value = cityName
+    previousValidValue.value = cityName
     emit('update:modelValue', cityName)
     emit('select', cityName)
   } else {
     inputValue.value = selected
+    previousValidValue.value = selected
     emit('update:modelValue', selected)
     emit('select', selected)
   }
@@ -159,10 +193,10 @@ onBeforeUnmount(() => {
         :model-value="inputValue"
         :disabled="disabled"
         @update:model-value="onInput"
+        @blur="onBlur"
         class="app-autocomplete__input">
           <template #icon>
             <button class="invisible-button app-autocomplete__icon" @click="focusInput"><AppIcons
-            v-if="type === 'city'"
             name="expand-more"
             /></button>
           </template>

@@ -11,7 +11,7 @@ const emit = defineEmits<{
 const { data, r$ } = useFormValidation(
   { name: ''},
   {
-    name: { type: 'text', required: true, maxLength: 32 }
+    name: { type: 'text', required: true}
   }
 )
 const taskTypes = useTaskTypes()
@@ -74,7 +74,7 @@ const confirmDelete = () => {
              @open-select="isOpened = true" v-model="selectedType" @toggle-select="isOpened = !isOpened">
                 <template #dropdown>
                     <AppDropdown type="default" :disableClickOutside="isDeleting":options="options" :isOpened="isOpened" :showActions="true" 
-                    @close="isOpened = false" @update:modelValue="selectedType = $event"
+                    @close="isOpened = false" @update:modelValue="selectedType = $event" :modelValue="selectedType"
                     @edit="handdleEditting" @delete="handleDeleteConfirm" @add="handleAdding" />
                 </template>
             </AppInput>
