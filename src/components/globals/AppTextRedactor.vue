@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import * as Y from 'yjs'
 import { useEditor, EditorContent, Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -36,9 +36,43 @@ const updateMarking = () => {
     }
 }
 
+const color = ref('#8adcc8')
+const isColorPickerOpen = ref(false)
+
+const toggleColorPicker = () => {
+    isColorPickerOpen.value = !isColorPickerOpen.value
+}
+
+const applyColor = (newColor: string) => {
+    if (!editor.value) return
+    color.value = newColor
+    editor.value.chain().focus().toggleHighlight({ color: newColor }).run()
+    const html = editor.value.getHTML()
+    setHtml(html)
+    emit('update:modelValue', html)
+}
+
+const updateCurrentColor = () => {
+  if (!editor.value) return
+  const attrs = editor.value.getAttributes('highlight')
+  if (attrs.color) {
+    color.value = attrs.color
+  }
+}
+
+const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement
+    if (!target.closest('.text-redactor__section--color')) {
+        isColorPickerOpen.value = false
+    }
+}
+
 const editor = useEditor({
     content: props.modelValue,
-    extensions: [StarterKit, Highlight,
+    extensions: [StarterKit,
+    Highlight.configure({
+        multicolor: true
+    }),
         TextAlign.configure({
             types: ['heading', 'paragraph'],
         })
@@ -51,6 +85,7 @@ const editor = useEditor({
     },
     onSelectionUpdate: ({ editor }) => {
         updateMarking()
+        updateCurrentColor()
     }
 })
 
@@ -67,6 +102,13 @@ watch(marking, (newVal) => {
     } else if (newVal === 'Заголовок') {
         editor.value.chain().focus().toggleHeading({ level: 1 }).run()
     }
+})
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+})
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -101,14 +143,23 @@ watch(marking, (newVal) => {
             @click="editor?.chain().focus().toggleUnderline().run()" :class="{ 'is-active': editor?.isActive('underline') }">U</button>
             <button class="text-redactor__section--button text-redactor__section--striked"
             @click="editor?.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor?.isActive('strike') }">S</button>
-            <button class="text-redactor__section--button" @click="editor?.chain().focus().toggleBlockquote().run()">
+            <button class="text-redactor__section--button" 
+            @click="editor?.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor?.isActive('blockquote') }">
                 <AppIcons name="quotes" />
             </button>
             <button class="text-redactor__section--button text-redactor__section--highlighted"
             @click="editor?.chain().focus().toggleHighlight().run()" :class="{ 'is-active': editor?.isActive('highlight') }">
                 <AppIcons name="highlight" />
             </button>
-            <AppIcons name="expand-more" />
+            <div class="text-redactor__section text-redactor__section--color">
+                <button class="text-redactor__section--invisible-button" @click="toggleColorPicker">
+                    <AppIcons name="expand-more" />
+                </button>
+                <div class="color-picker-wrapper" v-if="isColorPickerOpen">
+                    <input type="color" v-model="color" class="color-picker" 
+                    ref="colorInputRef" @input="applyColor(($event.target as HTMLInputElement).value)"/>
+                </div>
+            </div>
         </div>
 
         <div class="text-redactor__section text-redactor__section--fourth">
@@ -136,7 +187,6 @@ watch(marking, (newVal) => {
             </button>
         </div>
     </div>
-
 
     <editor-content :editor="editor"/>
 </template>
@@ -167,7 +217,8 @@ watch(marking, (newVal) => {
     &--button {
         border: none;
         background-color: transparent;
-        padding: 2px 6px;
+        padding: 0 6px;
+        height: 26px;
         margin: 0;
         cursor: pointer;
         display: flex;
@@ -187,6 +238,20 @@ watch(marking, (newVal) => {
             opacity: 0.5;
             cursor: default;
             pointer-events: none;
+        }
+    }
+
+    &--invisible-button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        transform: translateY(2px);
+        position: relative;
+
+        &:hover {
+            opacity: 0.5;
         }
     }
 
@@ -249,6 +314,34 @@ watch(marking, (newVal) => {
     margin-left: 2px;
 }
 
+.text-redactor__section--color {
+    position: relative;
+}
+
+.color-picker-wrapper {
+    position: absolute;
+    background-color: var(--primary-contast-text);
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    top: 28px;
+    left: -10px;
+    z-index: 1000;
+    padding: 4px;
+}
+
+.color-picker {
+    height: 30px;
+    width: 30px;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
 .ProseMirror {
     max-width: 708px;
     width: 100%;
@@ -281,7 +374,7 @@ watch(marking, (newVal) => {
     }
 
     mark {
-        background-color: rgba(20, 184, 144, 0.5);
+        background-color: #8adcc8;
     }
 
     h1 {

@@ -149,6 +149,7 @@ const openInNewTab = () => {
     max-width: 708px;
     width: 100%;
     padding: 32px 0 32px 28px;
+    margin-bottom: 40px;
     border: 1px solid var(--border-gray);
     border-radius: 16px;
 

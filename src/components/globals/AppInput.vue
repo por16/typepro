@@ -14,7 +14,8 @@ const props = defineProps<{
     required?: boolean,
     iconName?: IconName,
     invisibleSelect?: boolean,
-    squareShape?: boolean
+    squareShape?: boolean,
+    autocomplete?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -69,7 +70,10 @@ const handleFileChange = (event: Event) => {
             :disabled="disabled"
             :required="required"
             class="app-input__field"
-            :class="{ 'app-input__field--if-icon': props.iconName}" />
+            :class="{ 
+                'app-input__field--if-icon': props.iconName,
+                'app-input__field--select-icon': props.autocomplete
+            }" />
             <AppIcons :name="iconName" v-if="iconName" class="app-input__icon--left"/>
 
             <input
@@ -97,7 +101,7 @@ const handleFileChange = (event: Event) => {
             :placeholder="placeholder"
             :disabled="disabled"
             :required="required"
-            class="app-input__field app-input__field--select"
+            class="app-input__field app-input__field--select app-input__field--select-icon"
             :class="{
                 'app-input__field--invisible-select' : props.invisibleSelect,
                 'app-input__field--square-shape' : props.squareShape
@@ -116,7 +120,7 @@ const handleFileChange = (event: Event) => {
             :disabled="disabled"
             :required="required"
             :type="isPasswordVisible? 'text' : 'password'"
-            class="app-input__field"
+            class="app-input__field app-input__field--right-icon"
             @input="onInput" />
             <button
             v-if="type === 'password'"
@@ -176,7 +180,7 @@ const handleFileChange = (event: Event) => {
 
     &__field {
         width: 100%;
-        padding: 11px 28px 11px 14px;
+        padding: 11px 14px 11px 14px;
         overflow: hidden;
         text-overflow: ellipsis;
         font-size: 14px;
@@ -200,6 +204,14 @@ const handleFileChange = (event: Event) => {
         &--invisible-select {
             border: none;
             padding: 0;
+        }
+
+        &--right-icon {
+            padding-right: 40px;
+        }
+
+        &--select-icon {
+            padding-right: 28px;
         }
 
         &--if-icon {

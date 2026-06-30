@@ -168,4 +168,9 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to) => {
+  const title = (to.meta?.title as string) || 'Тайпро'
+  document.title = title
+})
+
 export default router

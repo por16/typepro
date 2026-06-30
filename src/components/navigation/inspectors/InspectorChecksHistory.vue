@@ -469,7 +469,7 @@ const paginatedData = computed(() => {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     &--displayed {
         color: var(--text-secondary);

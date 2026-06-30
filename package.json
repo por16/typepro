@@ -11,6 +11,9 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@cyhnkckali/vue3-color-picker": "^2.1.7",
+    "@primeuix/themes": "^3.0.0-rc.1",
+    "@radial-color-picker/vue-color-picker": "^6.0.0",
     "@regle/core": "^1.26.0",
     "@regle/rules": "^1.28.0",
     "@tiptap/extension-bold": "^3.26.0",
@@ -25,6 +28,8 @@
     "@tiptap/starter-kit": "^3.26.0",
     "@tiptap/vue-3": "^3.26.0",
     "pinia": "^3.0.4",
+    "primevue": "^5.0.0-rc.1",
+    "vcolorpicker": "^2.2.0",
     "vue": "^3.5.32",
     "vue-router": "^5.0.4",
     "y-webrtc": "^10.3.0",

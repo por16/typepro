@@ -194,11 +194,12 @@ onBeforeUnmount(() => {
         :disabled="disabled"
         @update:model-value="onInput"
         @blur="onBlur"
-        class="app-autocomplete__input">
+        class="app-autocomplete__input"
+        autocomplete>
           <template #icon>
-            <button class="invisible-button app-autocomplete__icon" @click="focusInput"><AppIcons
-            name="expand-more"
-            /></button>
+            <button class="invisible-button app-autocomplete__icon" @click="focusInput">
+              <AppIcons name="expand-more"/>
+            </button>
           </template>
         </AppInput>
     </div>
