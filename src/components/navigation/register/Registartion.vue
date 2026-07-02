@@ -83,7 +83,7 @@ const handleRegistration = () => {
         <template #under-footer>
             <p class="registration__under-footer">
                 <span>Нажимая на кнопку, вы соглашаетесь с </span>
-                <span class="text--light-gray link">Политикой <br>обработки персональных данных</span>
+                <span class="text--light-gray link registration__under-footer--link">Политикой <br>обработки персональных данных</span>
             </p>
         </template>
 
@@ -108,6 +108,10 @@ const handleRegistration = () => {
 .registration__under-footer {
     font-size: 12px;
     margin-top: 4px;
+
+    &--link:hover {
+        text-decoration: underline;
+    }
 }
 
 .below-container {

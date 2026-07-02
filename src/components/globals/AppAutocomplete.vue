@@ -121,21 +121,34 @@ const onInput = (value: string) => {
 }
 
 const onBlur = () => {
-  if (props.disabled || props.type !== 'city') return
-  if (!inputValue.value) {
-    previousValidValue.value = ''
-    inputValue.value = ''
-    emit('update:modelValue', '')
-    return
+  if(props.disabled) return
+  if(props.type === 'city') {
+    if(!inputValue.value) {
+      previousValidValue.value = ''
+      inputValue.value = ''
+      emit('update:modelValue', '')
+      return
+    }
+    const isValid = allCities.value.some(city => city.toLowerCase() === inputValue.value.toLowerCase())
+    if(!isValid) {
+      inputValue.value = previousValidValue.value
+      emit('update:modelValue', previousValidValue.value)
+    }
+  } else if(props.type === 'address') {
+    if (!inputValue.value) {
+      previousValidValue.value = ''
+      inputValue.value = ''
+      emit('update:modelValue', '')
+      return
+    }
+    const isValid = suggestions.value.some(suggestion => suggestion.toLowerCase() === inputValue.value.toLowerCase())
+    if (!isValid) {
+      inputValue.value = previousValidValue.value
+      emit('update:modelValue', previousValidValue.value)
+    } else {
+      previousValidValue.value = inputValue.value
+    }
   }
-  const isValid = allCities.value.some(
-    city => city.toLowerCase() === inputValue.value.toLowerCase()
-  )
-  if (!isValid) {
-    inputValue.value = previousValidValue.value
-    emit('update:modelValue', previousValidValue.value)
-  }
-  console.log('BLUR triggered')
 }
 
 const focusInput = () => {

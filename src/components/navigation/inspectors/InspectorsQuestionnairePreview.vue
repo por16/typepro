@@ -142,11 +142,11 @@ onBeforeUnmount(() => {
                     label="Город" placeholder="Выберите город" class="questionnaire-preview__inputs--element" />
 
                     <AppAutocomplete v-if="fields.address" type="address" label="Адрес" :city-filter="city" v-model="address"
-                    placeholder="Введите ваш адрес" class="questionnaire-preview__inputs--element" />
+                    placeholder="Введите ваш адрес" class="questionnaire-preview__inputs--element" :disabled="city === ''"/>
 
                     <div ref="calendarWrapper" class="questionnaire-preview__inputs--element">
                     <AppInput v-if="fields.birthDate" type="calendar" label="Дата рождения" placeholder="ДД.ММ.ГГ" v-model="displayDate"
-                    class="questionnaire-preview__inputs--short" @click="toggleCalendar" >
+                    class="questionnaire-preview__inputs--short" @click="toggleCalendar">
                         <template #dropdown>
                             <AppCalendar v-if="isCalendarOpen" v-model="selectedDate" @close="isCalendarOpen = false" />
                         </template>
